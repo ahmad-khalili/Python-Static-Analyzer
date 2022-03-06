@@ -1,3 +1,3 @@
 with open("File/Test.py", "r") as file:
-    content = file.read()
-    
+    lines = [line.rstrip() for line in file]
+
