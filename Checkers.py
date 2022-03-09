@@ -111,3 +111,16 @@ def argument_check():
     return warnings
 
 
+def unreachable_code():
+    lines = list(filter(None, FileReader.lines))
+    unreachable_lines = []
+    for line in lines:
+        if "return" in line or "break" in line or "continue" in line:
+            spaces_count = len(line) - len(line.strip())
+            if lines[lines.index(line) + 1].startswith(" " * spaces_count):
+                unreachable_lines.append(lines[lines.index(line) + 1].strip() + " is unreachable")
+
+    return unreachable_lines
+
+
+
