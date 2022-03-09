@@ -50,3 +50,64 @@ def magicNumberInFunctionCall(masseges, linenumber):
     linenumber = linenumber + 1
 
 
+def is_float(string):
+    try:
+        float(string)
+        return True
+    except ValueError:
+        return False
+
+
+def argument_check():
+    warnings = []
+    function_calls = []
+    functions_names = []
+    functions = []
+    used_functions = []
+    for line in FileReader.lines:
+        if "def" in line:
+            try:
+                functions.append((re.findall(r'def (.+?):', line))[0])
+            except:
+                break
+    for function in functions:
+        try:
+            functions_names.append(re.findall(r'(.+?)\(', function)[0])
+        except:
+            break
+
+    for line in FileReader.lines:
+        for function in functions_names:
+            if f'{function}(' in line:
+                if "def" not in line:
+                    try:
+                        function_calls.append(re.findall(fr'({function}.+?\))', line)[0])
+                    except:
+                        break
+
+    for called_function in function_calls:
+        function_name = re.findall(r'(.+?)\(', called_function)[0]
+        for function in functions:
+            if function_name in function:
+                try:
+                    parameters = re.findall(r'\((.+?)\)', function)[0].replace(" ", "").split(',')
+                except:
+                    parameters = [""]
+                try:
+                    arguments = re.findall(r'\((.+?)\)', called_function)[0].replace(" ", "").split(',')
+                except:
+                    arguments = [""]
+                if len(arguments) != len(parameters):
+                    warnings.append(f"Invalid arguments for {called_function} at line {(FileReader.lines.index(called_function)) + 1}")
+                for argument in arguments:
+                    if not argument.isdigit() and not is_float(argument) and "string" in parameters:
+                        continue
+                    if argument.isdigit and "int" in parameters:
+                        continue
+                    if is_float(argument) and "float" in parameters:
+                        continue
+                    else:
+                        warnings.append(f"Invalid arguments for {called_function} at line {(FileReader.lines.index(called_function)) + 1}")
+    return warnings
+
+
