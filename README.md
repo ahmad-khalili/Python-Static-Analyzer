@@ -150,3 +150,7 @@ for warning in warnings_arguments:
 for code in unreachable_code:
     print(code)
 ```
+
+# Demo
+
+https://user-images.githubusercontent.com/63163965/157541132-7522997c-c023-41cd-8fba-b1c8c781ef27.mp4
