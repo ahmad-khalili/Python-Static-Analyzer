@@ -34,8 +34,7 @@ def magic_operation(masseges, linenumber):
 
 def print_messages(masseges):
     mass_range = list(masseges)
-    for i in mass_range:
-        print(i)
+    return mass_range
 
 
 def magic_call(masseges, linenumber):
@@ -133,3 +132,5 @@ def parameter_check():
             if counter > 2:
                 warnings.append(f'"{functions[0]}" has more than 3 parameters')
     return warnings
+
+
