@@ -41,9 +41,10 @@ def print_messages(masseges):
 def magic_call(masseges, linenumber):
     result = []
     parenthesis = ['(']
+    parenthesis1 = [')']
     for line in FileReader.lines:
         for n in parenthesis:
-            result = re.findall(rf".*{parenthesis}[0-9]", line)
+            result = re.findall(rf".*{parenthesis}[0-9]{parenthesis1}", line)
             for x in result:
                 if str(x) in line:
                     result += ['contain magic number', 'in line', linenumber]
