@@ -5,7 +5,7 @@ masseges = []
 linenumber = 1
 
 
-def magicNumberAfterOperator(masseges, linenumber):
+def magic_operator(masseges, linenumber):
 
     result = []
     operators = ['+', '-', '*', '/', '%']
@@ -18,7 +18,7 @@ def magicNumberAfterOperator(masseges, linenumber):
         linenumber = linenumber + 1
         
 
-def magicNumberAfterOperation(masseges, linenumber):
+def magic_operation(masseges, linenumber):
 
     result = []
     statements = ["while", "for", "if"]
@@ -31,13 +31,13 @@ def magicNumberAfterOperation(masseges, linenumber):
         linenumber = linenumber + 1
 
 
-def printMasseges(masseges):
+def print_messages(masseges):
     mass_range = list(masseges)
     for i in mass_range:
         print(i)
 
 
-def magicNumberInFunctionCall(masseges, linenumber):
+def magic_call(masseges, linenumber):
     result = []
     parenthesis = ['(']
     for line in FileReader.lines:
