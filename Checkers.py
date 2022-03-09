@@ -122,5 +122,12 @@ def unreachable_code():
 
     return unreachable_lines
 
-
-
+def parameter_check():
+    warnings = []
+    for line in FileReader.lines:
+        if "def" in line:
+            functions = re.findall(r'def (.+?)\:', line)
+            counter = functions[0].count(',')
+            if counter > 2:
+                warnings.append(f'"{functions[0]}" has more than 3 parameters')
+    return warnings
