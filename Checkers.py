@@ -1,5 +1,6 @@
 import FileReader
 import re
+from collections import Counter
 
 masseges = []
 linenumber = 1
