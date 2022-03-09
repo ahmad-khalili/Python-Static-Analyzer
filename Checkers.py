@@ -16,6 +16,19 @@ def magicNumberAfterOperator(masseges, linenumber):
                 result += ['contain magic number', 'in line', linenumber]
                 masseges += [result]
         linenumber = linenumber + 1
+        
+
+def magicNumberAfterOperation(masseges, linenumber):
+
+    result = []
+    statements = ["while", "for", "if"]
+    for line in FileReader.lines:
+        for operation in statements:
+            if operation in line:
+                result = re.findall(rf"{operation}.*<|>|=.*", line)
+                result += ['contain magic number', 'in line', linenumber]
+                masseges += [result]
+        linenumber = linenumber + 1
 
 
 
