@@ -6,13 +6,13 @@ with open("File/Test.py", "r") as file:
     lines = [line.rstrip() for line in file]
 ```
 ### Part 2: Coding the Checkers
-#### 1- Checking for invalid arguments in function calls
-- The "parameter_check" function iterates through each line in the list of lines and checks every line for a function definition keyword (which is "def") with a regular expression using the re library and appends that function along with its parameters to a list called "functions"
+#### 1- Checking for Invalid arguments in Function calls
+- The "argument_check" function iterates through each line in the list of lines and checks every line for a function definition keyword (which is "def") with a regular expression using the re library and appends that function along with its parameters to a list called "functions"
 - Then it takes all the defined functions from "functions list" and appends their only the function names to a new list called "functions_names"
 - Then the function reiterates through the lines of code to search for the functions' names along with their first paranthesis "(" to check for function calls and appends them to the "function_calls" list if found
 - Finally the function iterates through the called functions lists and all the defined functions list, where it checks if the called's function's name is in the functions' definitions. And if it's true, it takes the function's required parameters from the definition, and function call's passed arguments. Then it checks for the length of the passed arguments in comparison to the required parameters' length. After that, it checks every argument's value if it's found in any of the function's parameters (since Python allows to pass the needed arguments without the right order)
 ```ruby
-def parameter_check():
+def argument_check():
     function_calls = []
     functions_names = []
     functions = []
@@ -64,9 +64,22 @@ def parameter_check():
     return warning_calls
 ```
 ###
-#### 2- Checking for unreachable code
+### 2- Checking for Functions with more than 3 parameters
+- This function, similar to the "argument_check" function, iterates through each line in the list of lines. Then it looks for function definitions, and checks for the number of commas. If they were more than 2 (which are more than 3 parameters), then it appends that function definition to a list called warnings.
+```ruby
+def parameter_check():
+    warnings = []
+    for line in FileReader.lines:
+        if "def" in line:
+            functions = re.findall(r'def (.+?)\:', line)
+            counter = functions[0].count(',')
+            if counter > 2:
+                warnings.append(f'"{functions[0]}" has more than 3 parameters')
+    return warnings
+```
+#### 3- Checking for Unreachable Code
 - The function "unreachable_code" iterates through each line in the list of line (but first, it filters the "lines" list from empty lines, since we need to capture every executable line after the stop statements such as "return", "break", "continue") 
-- Then it checks if there is a line of code after the stop statement (couldn't figure out how to take all the lines of code after the stop statement because of indentations) and adds it to the "unreachable_lines" list
+- Then it checks if there is a line of code after the stop statement (couldn't figure out how to take all the lines of code after the stop statement because of indentations) and adds it to the "unreachable_lines"
 ```ruby
 def unreachable_code():
     lines = list(filter(None, FileReader.lines))
@@ -76,5 +89,64 @@ def unreachable_code():
             spaces_count = len(line) - len(line.strip())
             if lines[lines.index(line) + 1].startswith(" " * spaces_count):
                 unreachable_lines.append(lines[lines.index(line) + 1].strip() + " is unreachable")
-    print(unreachable_lines)
+    return unreachable_lines 
+```
+#### 4- Checking for Magic Numbers
+- This checker, consists of 3 main function (one to check for magic numbers in function calls, one for after operators, and one for after statements and conditions)
+- The first, reads through lines to check if they have paranthesis and checks if the inside of the paranthesis contains the numbers 0 through 9.
+- The second, looks for condition statement or loops and checks to see if after every operator within that operation contains a number 0 through 9
+- The third, checks for arithmetic operators in each line and then checks the two ends of those operators if they contain the numbers 0 through 9
+```ruby
+def magic_call(masseges, linenumber):
+    result = []
+    parenthesis = ['(']
+    for line in FileReader.lines:
+        for n in parenthesis:
+            result = re.findall(rf".*{parenthesis}[0-9]", line)
+            for x in result:
+                if str(x) in line:
+                    result += ['contain magic number', 'in line', linenumber]
+                    masseges += [result]
+    linenumber = linenumber + 1
+    
+def magic_operation(masseges, linenumber):
+    result = []
+    statements = ["while", "for", "if"]
+    for line in FileReader.lines:
+        for operation in statements:
+            if operation in line:
+                result = re.findall(rf"{operation}.*<|>|=.*", line)
+                result += ['contain magic number', 'in line', linenumber]
+                masseges += [result]
+        linenumber = linenumber + 1
+
+def magic_operator(masseges, linenumber):
+    result = []
+    operators = ['+', '-', '*', '/', '%']
+    for line in FileReader.lines:
+        for operator in operators:
+            if operator in line:
+                result = re.findall(".*[0-9]", line)
+                result += ['contain magic number', 'in line', linenumber]
+                masseges += [result]
+        linenumber = linenumber + 1
+```
+### Part 3: Outputting the Results
+- The "Reporters.py" file takes every returned value from every function in the "Checkers.py" file and outputs them to the console
+```ruby
+warnings_parameters = Checkers.parameter_check()
+warnings_arguments = Checkers.argument_check()
+unreachable_code = Checkers.unreachable_code()
+magic_after_operator = Checkers.magic_operator([], 1)
+magic_after_operation = Checkers.magic_operation([], 1)
+magic_in_function_call = Checkers.magic_call([], 1)
+
+for warning in warnings_parameters:
+    print(warning)
+
+for warning in warnings_arguments:
+    print(warning)
+
+for code in unreachable_code:
+    print(code)
 ```
